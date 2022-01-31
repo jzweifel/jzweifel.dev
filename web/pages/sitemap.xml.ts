@@ -1,4 +1,6 @@
+import groq from 'groq'
 import { getAllPostIds } from "../lib/posts"
+import sanityClient from '../lib/sanityClient'
 
 const EXTERNAL_DATA_URL = 'https://jzweifel.dev/posts'
 
@@ -26,7 +28,8 @@ function SiteMap() {
 }
 
 export async function getServerSideProps({ res }) {
-    const posts = getAllPostIds().map(post => ({ id: post.params.id }))
+    const query = groq`*[_type == "post" && defined(slug.current)][].slug.current`
+    const posts = (await sanityClient.fetch(query)).map((slug: string) => ({ id: slug }))
     const sitemap = generateSiteMap(posts);
 
     res.setHeader('Content-Type', 'text/xml')
