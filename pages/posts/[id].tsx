@@ -6,6 +6,7 @@ import utilStyles from '../../styles/utils.module.css'
 
 export default function Post({ postData }: {
     postData: {
+        id: string
         title: string
         date: string
         contentHtml: string
@@ -15,6 +16,11 @@ export default function Post({ postData }: {
         <Layout>
             <Head>
                 <title>{postData.title}</title>
+                <link
+                    rel="canonical"
+                    href={`https://www.jzweifel.dev/posts/${postData.id}`}
+                    key="canonical"
+                />
             </Head>
             <article>
                 <h1 className={utilStyles.headingXl}>{postData.title}</h1>

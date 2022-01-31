@@ -26,6 +26,11 @@ export default function Home({ allPostsData }: {
     <Layout home>
       <Head>
         <title>{siteTitle}</title>
+        <link
+          rel="canonical"
+          href="https://www.jzweifel.dev"
+          key="canonical"
+        />
       </Head>
       <section className={utilStyles.headingMd}>
         <p>Hello! I'm Jacob. I'm a software engineer and tech nerd.</p>
