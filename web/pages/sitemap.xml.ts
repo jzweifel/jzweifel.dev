@@ -1,5 +1,4 @@
 import groq from 'groq'
-import { getAllPostIds } from "../lib/posts"
 import sanityClient from '../lib/sanityClient'
 
 const EXTERNAL_DATA_URL = 'https://jzweifel.dev/posts'

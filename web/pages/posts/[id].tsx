@@ -1,69 +1,31 @@
-import Head from 'next/head'
-import imageUrlBuilder from '@sanity/image-url'
 import BlockContent from '@sanity/block-content-to-react'
 import groq from 'groq'
-import Layout from "../../components/layout"
-import Date from '../../components/date'
-import utilStyles from '../../styles/utils.module.css'
+import { Box } from '@chakra-ui/react'
+import BlogLayout from '../../layouts/blog'
 import sanityClient from '../../lib/sanityClient'
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
 
-function urlFor(source: SanityImageSource) {
-    return imageUrlBuilder(sanityClient).image(source)
+
+const serializers = {
+    list: (props) => (<Box as='ul' pt={2} pl={5} ml={2} {...props} />),
+    listItem: (props) => (<Box as='li' pb={1} {...props} />),
+    hardBreak: (props) => (<Box height='24px' {...props} />)
 }
 
 export default function Post({ post }: {
     post: {
-        slug: {
-            current: string
-        }
-        name: string
-        categories: string[],
-        authorImage: SanityImageSource
-        title: string
         body: []
-        publishedAt: string
     }
 }) {
-    const { title = "Missing title", name = "Missing name", categories, authorImage, slug, body = [] } = post
+    const { body = [] } = post
     return (
-        <Layout>
-            <Head>
-                <title>{title}</title>
-                <link
-                    rel="canonical"
-                    href={`https://www.jzweifel.dev/posts/${slug?.current}`}
-                    key="canonical"
-                />
-            </Head>
-            <article>
-                <h1 className={utilStyles.headingXl}>{title}</h1>
-                <span>By {name}</span>
-                {categories && (
-                    <ul>
-                        Posted in
-                        {categories.map((category) => <li key={category}>{category}</li>)}
-                    </ul>
-                )}
-                {authorImage && (
-                    <div>
-                        <img
-                            src={urlFor(authorImage)
-                                .width(50)
-                                .url()}
-                        />
-                    </div>
-                )}
-                <div className={utilStyles.lightText}>
-                    <Date dateString={post?.publishedAt} />
-                </div>
-                <BlockContent
-                    blocks={body}
-                    imageOptions={{ w: 320, h: 240, fit: 'max' }}
-                    {...sanityClient.config()}
-                />
-            </article>
-        </Layout>
+        <BlogLayout post={post}>
+            <BlockContent
+                blocks={body}
+                serializers={serializers}
+                imageOptions={{ w: 320, h: 240, fit: 'max' }}
+                {...sanityClient.config()}
+            />
+        </BlogLayout>
     )
 }
 
